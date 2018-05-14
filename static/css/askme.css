@@ -1,0 +1,137 @@
+body {
+    min-width: 580px;
+}
+
+.foot {
+    background-color: #abdbfc;
+}
+
+.navbar {
+    background-color: #abdbfc;
+    min-width: 530px;
+    max-height: 70px;
+    margin-bottom: 1rem;
+}
+
+.navdrop {
+    white-space: nowrap;
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+
+.search {
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+h3 {
+    padding: 1rem;
+    padding-top: 0;
+}
+
+.tag {
+    margin: 0.5rem;
+}
+
+.tegcloud {
+    margin-bottom: 0;
+}
+
+.teg-1 {
+    font-size: 14px; 
+}
+
+.teg-2 {
+    font-size: 16px; 
+}
+
+.teg-3 {
+    font-size: 18px; 
+    margin-left: 1rem;
+}
+
+.secondary {
+    margin-left: 2px;
+    margin-right: 2px;
+    background-color: #999999;
+}
+
+.danger {
+    background-color: #ff6666;
+}
+
+.success {
+    color: black;
+}
+.warning {
+    background-color: #ffdb4d;
+}
+
+.light {
+    border-color: black;
+    background-color: white;
+}
+
+.block {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    padding-bottom: 0.3rem;
+    background-color: #f4f6f9;
+}
+
+.card {
+    padding: 16px;
+    margin-bottom: 1rem;
+}
+
+.rating-color {
+    color: green;
+}
+
+.between-btn {
+    background-color: #f4f6f9;
+}
+
+.page-link {
+    background-color: #f4f6f9;
+}
+
+.card-title {
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+}
+
+.newrow {
+    margin-top: 1rem;
+}
+
+.question {
+    margin-bottom: 2rem; 
+}
+
+.myanswer {
+    margin-top: 2rem;
+}
+
+.listhead {
+    margin-top: 8px;
+    margin-bottom: 0;
+}
+
+.tagsask {
+    margin-bottom: 0!important;
+}
+
+.askq-btn {
+    margin-top: 2rem;
+}
+
+.alert {
+    padding-top: 6px;
+    padding-bottom: 5px;
+}
+
+.ask-title {
+    padding-bottom: 0.7rem;
+    margin-bottom: 1rem;
+}
