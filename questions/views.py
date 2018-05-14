@@ -1,11 +1,8 @@
 from django.shortcuts import render
-
-# Create your views here.
 from django.http import HttpResponse
 
-
 def index(request):
-    return HttpResponse("Hello, world. You're at the questions index.")
+    return render(request, 'questions/index.html')
 
 def hot(request):
     return HttpResponse("You're looking at hot questions.")

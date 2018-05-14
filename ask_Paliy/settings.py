@@ -30,6 +30,7 @@ ALLOWED_HOSTS = ['rasseki.com', '192.168.88.253', 'localhost', '127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
+    'questions.apps.QuestionsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
