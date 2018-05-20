@@ -82,8 +82,13 @@ WSGI_APPLICATION = 'ask_Paliy.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': 'knowshare',
+        'USER': 'django_knowshare',
+        'PASSWORD': 'django654',
+        'HOST': '',
+        'PORT': '',
     }
 }
 
