@@ -1,6 +1,7 @@
 from django.urls import path
-
-from . import views
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from questions import views
+# from questions.views import QuestionList
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -12,5 +13,4 @@ urlpatterns = [
     path('ask/', views.ask, name='ask')
 ]
 
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 urlpatterns += staticfiles_urlpatterns()
