@@ -1,177 +1,41 @@
-<!doctype html>
+{% extends "questions/base.html" %}
 
-<html>
-<head>
-  <title>Sign Up</title>
-  <link rel="stylesheet" href="css/bootstrap.min.css" int>
-  <link rel="stylesheet" href="css/askme.css" int>
-  <script src="js/jquery.min.js"></script>
-  <script src="js/popper.min.js"></script>
-  <script src="js/bootstrap.min.js"></script>
-</head>
-<body>
+{% block title %}<title>Sign Up</title>{% endblock %}
 
-  <header>
-    <div class="container">
-      <div class="row">
-        <nav class="navbar navbar-expand navbar-light rounded-bottom col-md-12">
+{% block content %}
 
-          <a class="navbar-brand mr-auto">
-            <img src="images/cloud.png" width="40" height="40">
-            <span class="navbar-brand mb-0 h1">Know.Share</span>
-          </a>
+<div class="col-md-8 order-md-1 px-0">
 
-          <div class="row w-100">
-            <div class="search col-lg">
-              <form class="navbar-form navbar-right w-100" role="search" id="navBarSearchForm">
-                <input class="form-control" type="text" placeholder="Search">
-              </form>
-            </div>
-          </div>
-
-          <button type="button" class="btn btn-primary mr-3">Sign Up</button>
-          <button type="button" class="btn btn-danger search-btn">Sign In</button>
-
-        </nav>
-      </div>
+  <div class="row">
+    <div class="col-3">
     </div>
-  </header>
 
-  <div class="container content">
-    <div class="row">
-
-      <div class="col-md-8 order-md-1 px-0">
-
-        <div class="row">
-          <div class="col-3">
-          </div>
-
-          <div class="card col-6 block mb-2">
-            <form class="form-signin">
-              <h1 class="h3 mb-3 text-center text-muted font-weight-normal">Sign Up</h1>
-
-              <input type="username" class="form-control" placeholder="Username" required autofocus>
-              <div class="checkbox mb-3">
-              </div>
-              <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
-              <div class="checkbox mb-3">
-              </div>
-              <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
-              <div class="checkbox mb-3">
-              </div>
-              <input type="password" id="inputPassword" class="form-control" placeholder="Confirm password" required>
-              <div class="checkbox mb-3">
-              </div>
-              
-              <div class="input-group mb-3">
-                <div class="custom-file">
-                  <input type="file" class="custom-file-input" id="inputGroupFile02">
-                  <label class="custom-file-label" for="inputGroupFile02">Choose avatar</label>
-                </div>
-                <div class="input-group-append">
-                  <span class="input-group-text" id="">Upload</span>
-                </div>
-              </div>
-              
-              <button class="btn btn btn-primary btn-block" type="submit">Sign Up</button>
-              
-            </form>
-          </div>
+    <div class="card col-6 block mb-2">
+      <h1 class="h3 mb-3 text-center text-muted font-weight-normal">Sign Up</h1>
+      
+      <form class="form-signin" method="POST" enctype="multipart/form-data">
+        {%csrf_token%}
+        {% for error in form.non_field_errors %}
+        <div class="form-group has-errors alert alert-danger text-center" role="alert">
+            {{error}}
         </div>
+        {% endfor %}
 
-      </div>
-
-      <div class="col-md-4 order-2 mb-4 pr-0">
-        <div class="border rounded block" id="populartags">
-          <h3 class="text-muted text-center border-bottom">Popular tags</h3>
-          
-          <div class="col-lg-offset-4 mb-3 tegcloud" id="tegcloud">
-            <a class="badge tag font-weight-light" href="#">id</a>
-            <a class="badge tag font-weight-light" href="#">xiaomi</a>
-            <a class="badge tag font-weight-light" href="#">tag</a>
-            <a class="badge tag font-weight-light" href="#">Журавль</a>
-            <a class="badge tag font-weight-light" href="#">Python</a>
-            <a class="badge tag font-weight-light" href="#">нога</a>
-            <a class="badge tag font-weight-light" href="#">bootstrap</a>
-            <a class="badge tag font-weight-light" href="#">c++</a>
-            <a class="badge tag font-weight-light" href="#">Natrium</a>
-            <a class="badge tag font-weight-light" href="#">WEB</a>
-            <a class="badge tag font-weight-light" href="#">OnePlus</a>
-            <a class="badge tag font-weight-light" href="#">Technopark</a>
-            <a class="badge tag font-weight-light" href="#">Алгоритмы</a>
-            <a class="badge tag font-weight-light" href="#">c#</a>
-            <a class="badge tag font-weight-light" href="#">Ксюша</a>
-            <a class="badge tag font-weight-light" href="#">Lineage OS</a>
-            <a class="badge tag font-weight-light" href="#">Сопроматяра</a>
-          </div>
-          <script type="text/javascript">
-            $(document).ready(function(){
-              var badges = [
-                "badge-primary primary", "badge-secondary secondary", 
-                "badge-danger danger", "badge-success success", 
-                "badge-warning warning", "badge-info info", "badge-light light"];
-              $("#tegcloud a").each(function(){
-                $(this).addClass(badges[~~(Math.random()*badges.length)]);
-              });
-              var sizes = [
-                "teg-1", "teg-2", "teg-3"];
-              $("#tegcloud a").each(function(){
-                $(this).addClass(sizes[~~(Math.random()*sizes.length)]);
-              });
-            });
-          </script>
+        {% for field in form %}
+        <div class="form-group has-errors text-danger small">
+            {{field.errors}}
         </div>
-
-        <div class="border rounded block" id="activeusers">
-          <h3 class="text-muted text-center border-bottom">Active users</h3>
-          <div class="col-lg-offset-4 mb-3">
-            <ul class="list-group mb-3">
-              <li class="list-group-item d-flex justify-content-between lh-condensed">
-                <div>
-                  <h6 class="my-0">Vasya Pupkin</h6>
-                  <small class="text-muted">Python developer in Microsoft</small>
-                </div>
-                <a style="color: green;">32</a>
-              </li>
-              <li class="list-group-item d-flex justify-content-between lh-condensed">
-                <div>
-                  <h6 class="my-0">User Name</h6>
-                  <small class="text-muted">Technopark student</small>
-                </div>
-                <a style="color: green;">18</a>
-              </li>
-              <li class="list-group-item d-flex justify-content-between lh-condensed">
-                <div>
-                  <h6 class="my-0">Linus Torwalds</h6>
-                  <small class="text-muted">I made Linux</small>
-                </div>
-                <a style="color: green;">15</a>
-              </li>
-              <li class="list-group-item d-flex justify-content-between lh-condensed">
-                <div>
-                  <h6 class="my-0">Stepan Marckevich</h6>
-                  <small class="text-muted">Your algorythm sucks</small>
-                </div>
-                <a style="color: green;">14</a>
-              </li>
-              <li class="list-group-item d-flex justify-content-between lh-condensed">
-                <div>
-                  <h6 class="my-0">Ksenia Strelkova</h6>
-                  <small class="text-muted">Die shokoladky</small>
-                </div>
-                <a style="color: green;">4</a>
-              </li>
-            </ul>
-          </div>
+        <div class="form-group">
+            {{field}}
         </div>
-      </div>
+        {% endfor %}
 
+        <button class="btn btn btn-primary btn-block" type="submit">Sign Up</button>
+        
+      </form>
     </div>
   </div>
 
-  <footer class="mt-3 py-3 text-muted text-center text-small float-bottom">
-    <p class="mb-1">2018 Know.Share</p>
-  </footer>
+</div>
 
-</body>
-</html>
+{% endblock %}

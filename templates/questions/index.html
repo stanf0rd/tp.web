@@ -3,50 +3,72 @@
 {% block title %}<title>Questions</title>{% endblock %}
 
 {% block content %}
-{% for q in question_list %}
-<div class="card block">
-  <div class="row">
-    <div class="d-flex flex-column mx-auto">
-      {% load static %}
-      <img src="{% static 'questions/images/cat.jpg' %}" width="80" height="80" class="mx-auto rounded-circle mb-3 ">
-      <a class="btn-sm border between-btn">{{ q.answer_count }} answers</a>
-    </div>
-    <div class="col-10 pl-0">
-      <h5 class="pb-3 mb-3 border-bottom">
-        <a href="#">{{ q.question_title }}</a>
-      </h5>
-      <p class="card-text">{{ q.question_text }}</p>
-    </div>
-  </div>
-  <div class="row mt-0 mt-2">
-    <div class="d-flex flex-column mx-auto">
-      <div class="btn-group btn-group-sm vote" role="group">
-        <button type="button" class="btn btn-success">↑</button>
-        <a class="btn border-top border-bottom between-btn">{{ q.rating }}</a>
-        <button type="button" class="btn btn-danger">↓</button>
+
+<div class="col-md-8 px-0">
+  {% for question in questions %}
+  <div class="card block">
+    <div class="row">
+      <div class="d-flex flex-column mx-auto">
+        {% load static %}
+        <img src="{% static 'questions/images/cat.jpg' %}" width="80" height="80" class="mx-auto rounded-circle mb-3 ">
+        <a class="btn-sm border between-btn">20{% comment %} {{ question.answer_count }} {% endcomment %} answers</a>
+      </div>
+      <div class="col-10 pl-0">
+        <h5 class="pb-3 mb-3 border-bottom">
+          <a href="#">{{ question.title }}</a>
+        </h5>
+        <p class="card-text">{{ question.text }}</p>
       </div>
     </div>
-    <div class="col-10 pl-0">
+    <div class="row mt-0 mt-2">
+      <div class="d-flex flex-column mx-auto">
+        <div class="btn-group btn-group-sm vote" role="group">
+          <button type="button" class="btn btn-success">↑</button>
+          <a class="btn border-top border-bottom between-btn"> 20{% comment %} {{ question.rating }} {% endcomment %}</a>
+          <button type="button" class="btn btn-danger">↓</button>
+        </div>
+      </div>
+      <div class="col-10 pl-0">
 
-      <a class="float-right btn btn-sm btn-primary" href="{% url 'question_page' q.question_id %}">Answer!</a>
-      <h6 class="listhead">
-        <a style="margin-right: 5px;">Tags:</a>
-        {% for i in tag_list %}
-        <a class="badge badge-secondary secondary font-weight-light" href="{% url 'tag_page' i.tag_name %}">
-          {{ i.tag_name }}
-        </a>
-        {% endfor %}
-      </h5>
+        <a class="float-right btn btn-sm btn-primary" href="{% url 'question_page' question.id %}">Answer!</a>
+        <h6 class="listhead">
+          <a style="margin-right: 5px;">Tags:</a>
+          {% for tag in question.tags.all %}
+          <a class="badge badge-secondary secondary font-weight-light" href="{% url 'tag_page' tag.name %}">
+            {{ tag.name }}
+          </a>
+          {% endfor %}
+        </h5>
+      </div>
     </div>
   </div>
-</div>
-{% endfor %}
+  {% endfor %}
 
-<ul class="pagination">
-  <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-  <li class="page-item"><a class="page-link" href="#">1</a></li>
-  <li class="page-item"><a class="page-link" href="#">2</a></li>
-  <li class="page-item"><a class="page-link" href="#">3</a></li>
-  <li class="page-item"><a class="page-link" href="#">Next</a></li>
-</ul>
+  <ul class="pagination">
+    <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+    <li class="page-item"><a class="page-link" href="#">1</a></li>
+    <li class="page-item"><a class="page-link" href="#">2</a></li>
+    <li class="page-item"><a class="page-link" href="#">3</a></li>
+    <li class="page-item"><a class="page-link" href="#">Next</a></li>
+  </ul>
+
+  <div class="pagination">
+    <span class="step-links">
+        {% if questions.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ questions.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ questions.number }} of {{ questions.paginator.num_pages }}.
+        </span>
+
+        {% if questions.has_next %}
+            <a href="?page={{ questions.next_page_number }}">next</a>
+            <a href="?page={{ questions.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+  </div>
+</div>
+
 {% endblock %}
