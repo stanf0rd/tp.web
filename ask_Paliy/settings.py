@@ -56,6 +56,8 @@ STATICFILES_DIRS = [
     # '/var/www/static/',
 ]
 
+AUTH_USER_MODEL = 'questions.User'
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -110,7 +112,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/dev/topics/i18n/
