@@ -21,7 +21,7 @@ class Question(models.Model):
     creation_date = models.DateTimeField(default=datetime.now, verbose_name="Publication time")
     answer_count = models.IntegerField(default=0, verbose_name="Count of answers")
     is_active = models.BooleanField(default=True, verbose_name="If question is active")
-    tags = models.ManyToManyField(Tag, blank=True)
+    tags = models.ManyToManyField(Tag, related_name='tags', blank=True)
 
     def __str__(self):
         return self.title
@@ -36,5 +36,5 @@ class Answer(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE, null=True)
     creation_date = models.DateTimeField(default=datetime.now, verbose_name="Publication time")
     rating = models.IntegerField(default=0, verbose_name="Answer rating")
-    is_active = models.BooleanField(default=True, verbose_name="If question is active")
-    is_right = models.BooleanField(default=False, verbose_name="If question is marked by autor as right")
+    is_active = models.BooleanField(default=True, verbose_name="is active")
+    is_right = models.BooleanField(default=False, verbose_name="marked by autor as right")

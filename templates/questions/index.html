@@ -50,7 +50,7 @@
         <h6 class="listhead">
           <a style="margin-right: 5px;">Tags:</a>
           {% for tag in question.tags.all %}
-          <a class="badge badge-secondary secondary font-weight-light" href="{% url 'by_tag' tag.name %}">
+          <a class="pb-0 badge badge-secondary secondary font-weight-light" href="{% url 'by_tag' tag.name %}">
             {{ tag.name }}
           </a>
           {% endfor %}

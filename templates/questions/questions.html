@@ -29,7 +29,7 @@
         <h6 class="listhead mt-1">
           <a>Tags:</a>
           {% for tag in question.tags.all %}
-          <a href="{% url 'by_tag' tag.name %}" class="badge badge-secondary secondary font-weight-light">
+          <a href="{% url 'by_tag' tag.name %}" class="pb-0 badge badge-secondary secondary font-weight-light">
             {{ tag.name }}
           </a>
           {% endfor %}

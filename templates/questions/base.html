@@ -19,7 +19,7 @@
       <div class="row">
         <nav class="navbar navbar-expand navbar-light rounded-bottom col-md-12">
 
-          <a class="navbar-brand mr-auto">
+          <a class="navbar-brand mr-auto" href="{% url 'new' %}">
             {% load static %}
             <img src="{% static 'questions/images/cloud.png' %}" width="40" height="40">
             <span class="navbar-brand mb-0 h1">Know.Share</span>
@@ -33,7 +33,7 @@
             </div>
           </div>
 
-          <ul class="navbar-nav ml-auto navdrop">
+          {% comment %} <ul class="navbar-nav ml-auto navdrop">
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 {% load static %}
@@ -47,7 +47,10 @@
               </div>
             </li>
           </ul>
-          <a class="btn btn-primary" href="{% url 'ask' %}">Ask!</a>
+          <a class="btn btn-primary" href="{% url 'ask' %}">Ask!</a> {% endcomment %}
+
+          <a class="btn btn-primary mr-3" href="{% url 'register' %}">Register</a>
+          <a class="btn btn-danger search-btn" href="{% url 'login' %}">Log In</a>
 
         </nav>
       </div>

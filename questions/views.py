@@ -1,40 +1,51 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-#from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator
-from .models import Question, Answer
+from .models import Question, Answer, Tag
 from .forms import UserForm
 
-def new(request):
-    paginator = Paginator(Question.objects.all(), 2)
 
+def new(request):
+    question_list = Question.objects.order_by('creation_date')
+    paginator = Paginator(question_list, 2)
     page = request.GET.get('page')
     questions = paginator.get_page(page)
     return render(request, 'questions/index.html', {'questions': questions})
 
-def hot(request):
-    paginator = Paginator(Question.objects.all(), 2)
 
+def hot(request):
+    question_list = Question.objects.order_by('rating')
+    paginator = Paginator(question_list, 2)
     page = request.GET.get('page')
     questions = paginator.get_page(page)
     return render(request, 'questions/hot.html', {'questions': questions})
 
-def by_tag(request, tag):
-    paginator = Paginator(Question.objects.all(), 2)
 
-    page = request.GET.get('page')
-    questions = paginator.get_page(page)
-    return render(request, 'questions/tag.html', {'tag': tag, 'questions': questions})
+def by_tag(request, tag):
+    question_list = Question.objects.filter(tags__name=tag)
+    paginator = Paginator(question_list, 2)
+    page_number = request.GET.get('page')
+    content = {
+        'tag': tag,
+        'questions': paginator.get_page(page_number)
+    }
+    return render(request, 'questions/tag.html', content)
+
 
 def question(request, question_id):
-    question_obj = Question.objects.get(pk=question_id)
     paginator = Paginator(Answer.objects.all(), 2)
     page = request.GET.get('page')
-    answers = paginator.get_page(page)
-    return render(request, 'questions/questions.html', {'question': question_obj, 'answers': answers})
+    content = {
+        'question': get_object_or_404(Question, pk=question_id),
+        'answers': paginator.get_page(page)
+    }
+    return render(request, 'questions/questions.html', content)
+
 
 def login(request):
     return render(request, 'questions/login.html')
+
 
 def register(request):
 
@@ -52,6 +63,7 @@ def register(request):
         'form': form
     }
     return render(request, 'questions/register.html', context)
+
 
 def ask(request):
     return render(request, 'questions/ask.html')
