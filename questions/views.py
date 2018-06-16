@@ -2,30 +2,41 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 #from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator
-from .models import Question
+from .models import Question, Answer
 from .forms import UserForm
 
-def index(request):
-    question_list = Question.objects.all()
-    paginator = Paginator(question_list, 5)
+def new(request):
+    paginator = Paginator(Question.objects.all(), 2)
 
     page = request.GET.get('page')
     questions = paginator.get_page(page)
     return render(request, 'questions/index.html', {'questions': questions})
 
 def hot(request):
-    return render(request, 'questions/index.html')
+    paginator = Paginator(Question.objects.all(), 2)
 
-def tag(request, tag):
-    return HttpResponse("You're looking at tag \"%s\" questions." % tag)
+    page = request.GET.get('page')
+    questions = paginator.get_page(page)
+    return render(request, 'questions/hot.html', {'questions': questions})
+
+def by_tag(request, tag):
+    paginator = Paginator(Question.objects.all(), 2)
+
+    page = request.GET.get('page')
+    questions = paginator.get_page(page)
+    return render(request, 'questions/tag.html', {'tag': tag, 'questions': questions})
 
 def question(request, question_id):
-    return HttpResponse("You're looking at question number %s." % question_id)
+    question_obj = Question.objects.get(pk=question_id)
+    paginator = Paginator(Answer.objects.all(), 2)
+    page = request.GET.get('page')
+    answers = paginator.get_page(page)
+    return render(request, 'questions/questions.html', {'question': question_obj, 'answers': answers})
 
 def login(request):
-    return HttpResponse("You're looking at login page.")
+    return render(request, 'questions/login.html')
 
-def signup(request):
+def register(request):
 
     # form = ProfileForm(request.POST, request.FILES)
     if request.method == "POST":
@@ -40,7 +51,7 @@ def signup(request):
     context = {
         'form': form
     }
-    return render(request, 'questions/signup.html', context)
+    return render(request, 'questions/register.html', context)
 
 def ask(request):
     return render(request, 'questions/ask.html')

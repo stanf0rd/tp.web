@@ -4,12 +4,12 @@ from questions import views
 # from questions.views import QuestionList
 
 urlpatterns = [
-    path('', views.index, name='index'),
+    path('', views.new, name='new'),
     path('hot/', views.hot, name='hot'),
-    path('tag/<tag>/', views.tag, name='tag_page'),
+    path('tag/<tag>/', views.by_tag, name='by_tag'),
     path('question/<int:question_id>/', views.question, name='question_page'),
     path('login/', views.login, name='login'),
-    path('signup/', views.signup, name='signup'),
+    path('register/', views.register, name='register'),
     path('ask/', views.ask, name='ask')
 ]
 
