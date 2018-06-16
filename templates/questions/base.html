@@ -47,7 +47,6 @@
               </div>
             </li>
           </ul>
-          {% comment %} <a href="{% url 'ask' %}">CLICK</a> {% endcomment %}
           <a class="btn btn-primary" href="{% url 'ask' %}">Ask!</a>
 
         </nav>
@@ -71,7 +70,7 @@
           
           <div class="col-lg-offset-4 mb-3 tegcloud" id="tegcloud">
             {% for i in popular_tag_list %}
-            <a class="badge tag font-weight-light" href="{% url 'index/' tag %}">{{ tag }}</a>
+            <a class="badge tag font-weight-light" href="{% url 'by_tag/' tag %}">{{ tag }}</a>
             {% endfor %}
           </div>
           <script type="text/javascript">

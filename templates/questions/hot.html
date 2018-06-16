@@ -1,0 +1,12 @@
+{% extends "questions/index.html" %}
+
+{% block title %}<title>Hot</title>{% endblock %}
+
+{% block navigation %}
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'new' %}"><h4 class="mb-0 pb-0">New questions</h4></a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link active" href="{% url 'hot' %}"><h4 class="mb-0 pb-0">Hot questions</h4></a>
+  </li>
+{% endblock %}
