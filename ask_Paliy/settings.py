@@ -56,6 +56,8 @@ STATICFILES_DIRS = [
     # '/var/www/static/',
 ]
 
+AUTH_USER_MODEL = 'questions.User'
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

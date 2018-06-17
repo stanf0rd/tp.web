@@ -1,11 +1,15 @@
 from django.db import models
 from django.forms import ModelForm
 from django import forms
-from questions.models import Question, Profile, Answer
-from django.contrib.auth.models import User
+from questions.models import Question, User, Answer
+# from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import  login, authenticate
 
 # from django.core.files.uploadedfile import SimpleUploadedFile
+
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 class LoginForm(forms.Form):
     username = forms.CharField(widget=forms.EmailInput(attrs={
@@ -17,6 +21,23 @@ class LoginForm(forms.Form):
         'class':'form-control',
         'placeholder':'Password'
     }))
+
+    def clean(self):
+        cleaned_data = super().clean()
+        username = cleaned_data.get('username')
+        password = cleaned_data.get('password')
+        if username and password:
+            user = authenticate(username=username, password=password)
+            if not user or not user.is_active:
+                raise forms.ValidationError("Login or password are invalid.\nPlease try again.")
+            return self.cleaned_data
+
+    def login(self, request):
+        username = self.cleaned_data.get('username')
+        password = self.cleaned_data.get('password')
+        user = authenticate(username=username, password=password)
+        login(request, user)
+        return user
 
 class QuestionForm(ModelForm):
 
@@ -43,42 +64,28 @@ class AnswerForm(ModelForm):
         fields = ['text']
 
 
-class ProfileForm(ModelForm):
-
-    avatar = forms.ImageField()
-        # 'class':'custom-file-input custom-file',
-        # 'placeholder':'Choose avatar'
-        # avatar = forms.ImageField(
-        # label='Company Logo',required=False,
-        # error_messages = {'invalid':"Image files only"},
-        # widget=forms.FileInput
-    # )
-
-    class Meta:
-        model = Profile
-        fields = ['avatar']
-
 class UserForm(UserCreationForm):
     username = forms.CharField(widget=forms.TextInput(attrs={
-        'class':'form-control',
-        'placeholder':'Username'
-    }))
-
+        'class':'form-control', 'placeholder':'Username' }))
     email = forms.CharField(widget=forms.EmailInput(attrs={
-        'class':'form-control',
-        'placeholder':'Email'
-    }))
-
+        'class':'form-control', 'placeholder':'Email' }))
     password1 = forms.CharField(widget=forms.PasswordInput(attrs={
-        'class':'form-control',
-        'placeholder':'Password'
-    }))
-
+        'class':'form-control', 'placeholder':'Password' }))
     password2 = forms.CharField(widget=forms.PasswordInput(attrs={
-        'class':'form-control',
-        'placeholder':'Confirm password'
-    }))
+        'class':'form-control', 'placeholder':'Confirm password' }))
+
+    avatar = forms.ImageField()
+
+    # def clean(self):
+    #     cleaned_data = super().clean()
+    #     username = cleaned_data.get('username')
+    #     password = cleaned_data.get('password')
+    #     if username and password:
+    #         user = authenticate(username=username, password=password)
+    #         if not user or not user.is_active:
+    #             raise forms.ValidationError("Login or password are invalid.\nPlease try again.")
+    #         return self.cleaned_data
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'password1', 'password2']
+        fields = ['username', 'email', 'password1', 'password2', 'avatar']

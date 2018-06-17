@@ -2,10 +2,8 @@ from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator
 from .models import Question, Answer
-from django.contrib.auth.forms import UserCreationForm
-from .forms import ProfileForm, AnswerForm, QuestionForm, LoginForm, UserForm
-from django.contrib.auth import authenticate, login, logout
-
+from .forms import AnswerForm, QuestionForm, LoginForm, UserForm
+from django.contrib.auth import login, logout
 
 def new(request):
     question_list = Question.objects.order_by('creation_date')
@@ -59,52 +57,36 @@ def question(request, question_id):
     return render(request, 'questions/questions.html', content)
 
 
-def login_page(request):
+def register(request):
+    if request.method == "POST":
+        form = UserForm(request.POST, request.FILES)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.save()
+            login(request, user)
+            return redirect('/', pk=user.pk)
+    else:
+        form = UserForm()
+    return render(request, 'questions/register.html', {'form': form})
 
+
+def login_page(request):
     if request.method == "POST":
         form = LoginForm(request.POST)
         if form.is_valid():
-            username = request.POST['username']
-            password = request.POST['password']
-            user = authenticate(request, username=username, password=password)
-            if user is not None:
-                login(request, user)
-                return redirect('/', pk=user.pk)
-        # else:
-        #     form = LoginForm()
+            form.login(request)
+            return redirect('/')
     else:
         form = LoginForm()
-
     return render(request, 'questions/login.html', {'form': form})
 
 
 def logout_page(request):
     logout(request)
-
     return new(request)
 
 
-def register(request):
-    if request.method == "POST":
-        profile_form = ProfileForm(request.POST, request.FILES)
-        user_form = UserForm(request.POST)
-        if user_form.is_valid() and profile_form.is_valid():
-            user = user_form.save(commit=False)
-            user.save()
-            profile = profile_form.save(commit=False)
-            profile.user = user
-            profile.save()
-            login(request, user)
-            return redirect('/', pk=user.pk)
-    else:
-        profile_form = ProfileForm()
-        user_form = UserForm()
-
-    return render(request, 'questions/register.html', {'user_form': user_form, 'profile_form': profile_form})
-
-
 def ask(request):
-
     if request.method == "POST":
         form = QuestionForm(request.POST)
         if form.is_valid():
