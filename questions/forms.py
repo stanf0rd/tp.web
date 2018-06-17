@@ -11,6 +11,7 @@ from django.contrib.auth import  login, authenticate
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
+
 class LoginForm(forms.Form):
     username = forms.CharField(widget=forms.EmailInput(attrs={
         'class':'form-control',
@@ -39,18 +40,12 @@ class LoginForm(forms.Form):
         login(request, user)
         return user
 
+
 class QuestionForm(ModelForm):
 
     class Meta:
         model = Question
         fields = ['title', 'text', 'tags']
-
-# # Creating a form to add an article.
-# form = ArticleForm()
-
-# # Creating a form to change an existing article.
-# article = Article.objects.get(pk=1)
-# form = ArticleForm(instance=article)
 
 
 class AnswerForm(ModelForm):
@@ -59,6 +54,12 @@ class AnswerForm(ModelForm):
         'placeholder':'Type your answer here'
     }))
 
+    def save_answer(self, user, question):
+        answer = self.save(commit=False)
+        answer.author = user
+        answer.question = question
+        answer.save()
+
     class Meta:
         model = Answer
         fields = ['text']
@@ -66,25 +67,15 @@ class AnswerForm(ModelForm):
 
 class UserForm(UserCreationForm):
     username = forms.CharField(widget=forms.TextInput(attrs={
-        'class':'form-control', 'placeholder':'Username' }))
+        'class':'form-control', 'placeholder':'Username'}))
     email = forms.CharField(widget=forms.EmailInput(attrs={
-        'class':'form-control', 'placeholder':'Email' }))
+        'class':'form-control', 'placeholder':'Email'}))
     password1 = forms.CharField(widget=forms.PasswordInput(attrs={
-        'class':'form-control', 'placeholder':'Password' }))
+        'class':'form-control', 'placeholder':'Password'}))
     password2 = forms.CharField(widget=forms.PasswordInput(attrs={
-        'class':'form-control', 'placeholder':'Confirm password' }))
+        'class':'form-control', 'placeholder':'Confirm password'}))
 
     avatar = forms.ImageField()
-
-    # def clean(self):
-    #     cleaned_data = super().clean()
-    #     username = cleaned_data.get('username')
-    #     password = cleaned_data.get('password')
-    #     if username and password:
-    #         user = authenticate(username=username, password=password)
-    #         if not user or not user.is_active:
-    #             raise forms.ValidationError("Login or password are invalid.\nPlease try again.")
-    #         return self.cleaned_data
 
     class Meta:
         model = User

@@ -22,12 +22,6 @@
         </div>
         {% endfor %}
 
-        {% for message in messages %}
-        <div class="form-group has-errors alert alert-danger text-center" role="alert">
-          {{ message }}
-        </div>
-        {% endfor %}
-
         {% for field in form %}
         <div class="form-group">
           {{ field }}
@@ -38,7 +32,6 @@
               {{ error }}
             </div>
           {% endfor %}
-          {% comment %} {% for error in field.errors %} {% endcomment %}
         </div>
         {% endfor %}
 

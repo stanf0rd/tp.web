@@ -1,7 +1,6 @@
 from django.urls import path
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from questions import views
-# from questions.views import QuestionList
 
 urlpatterns = [
     path('', views.new, name='new'),
