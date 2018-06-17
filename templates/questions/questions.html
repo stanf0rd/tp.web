@@ -70,18 +70,38 @@
   {% endfor %}
 
   <div class="card block myanswer">
-    <h6 class="text-center">
-      <a>And what do you think?</a>
-    </h6>
-    <div class="input-group">
-      <div class="input-group-prepend">
-        <button type="button" class="float-right btn btn-outline-primary">
-          Answer!
-        </button>
-      </div>
-      <textarea class="form-control" aria-label="With textarea"></textarea>
+      <h6 class="text-center">
+        <a>And what do you think?</a>
+      </h6>
+      <form novalidate class="form-signin" method="POST">
+        {%csrf_token%}
+        {% for error in form.non_field_errors %}
+        <div class="form-group has-errors alert alert-danger text-center" role="alert">
+          {{ error }}
+        </div>
+        {% endfor %}
+    
+        {% for field in form %}
+        <div class="form-group has-errors text-danger small">
+          {% for error in field.errors %}
+            <div class="alert alert-danger" role="alert">
+              {{ error }}
+            </div>
+          {% endfor %}
+          {% comment %} {% for error in field.errors %} {% endcomment %}
+        </div>
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <button class="float-right btn btn-outline-primary" type="submit">
+              Answer!
+            </button>
+          </div>
+          {{ field }}
+        </div>
+        {% endfor %}
+      </form>
     </div>
-  </div>
+
 
   <ul class="pagination">
 

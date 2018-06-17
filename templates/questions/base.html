@@ -24,7 +24,6 @@
             <img src="{% static 'questions/images/cloud.png' %}" width="40" height="40">
             <span class="navbar-brand mb-0 h1">Know.Share</span>
           </a>
-
           <div class="row w-100">
             <div class="search col-lg">
               <form class="navbar-form navbar-right w-100" role="search" id="navBarSearchForm">
@@ -32,26 +31,29 @@
               </form>
             </div>
           </div>
-
-          {% comment %} <ul class="navbar-nav ml-auto navdrop">
+          
+          {% if user.is_authenticated %}
+          <ul class="navbar-nav ml-auto navdrop">
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 {% load static %}
                 <img src="{% static 'questions/images/cat.jpg' %}" width="30" height="30" class="avatar rounded-circle" alt="">
-                Andrew Dmitry Stanford
+                {{ user.username }}
               </a>
               <div class="dropdown-menu">
                 <a class="dropdown-item" href="#">My questions</a>
                 <a class="dropdown-item" href="#">Settings</a>
-                <a class="dropdown-item" href="#">Log out</a>
+                <a class="dropdown-item" href="{% url 'logout' %}">Log out</a>
               </div>
             </li>
           </ul>
-          <a class="btn btn-primary" href="{% url 'ask' %}">Ask!</a> {% endcomment %}
+          <a class="btn btn-primary" href="{% url 'ask' %}">Ask!</a>
 
+          {% else %}
           <a class="btn btn-primary mr-3" href="{% url 'register' %}">Register</a>
           <a class="btn btn-danger search-btn" href="{% url 'login' %}">Log In</a>
 
+          {% endif %}
         </nav>
       </div>
     </div>
@@ -73,7 +75,7 @@
           
           <div class="col-lg-offset-4 mb-3 tegcloud" id="tegcloud">
             {% for i in popular_tag_list %}
-            <a class="badge tag font-weight-light" href="{% url 'by_tag/' tag %}">{{ tag }}</a>
+            <a class="pb-0 badge tag font-weight-light" href="{% url 'by_tag/' tag %}">{{ tag }}</a>
             {% endfor %}
           </div>
           <script type="text/javascript">
