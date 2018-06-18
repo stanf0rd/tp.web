@@ -20,7 +20,7 @@ class QuestionManager(models.Manager):
         return self.order_by('rating')
 
     def get_new_questions(self):
-        return self.order_by('creation_date')
+        return self.order_by('-creation_date')
 
     def get_tag_questions(self, tag):
         return self.filter(tags__name=tag)
@@ -38,11 +38,21 @@ class Question(models.Model):
     tags = models.ManyToManyField(Tag, related_name='tags', blank=True)
     objects = QuestionManager()
 
-    def __str__(self):
-        return self.title
+    def like(self):
+        self.rating += 1
+        self.author.rating += 1
+        return self.rating
+
+    def dislike(self):
+        self.rating -= 1
+        self.author.rating -= 1
+        return self.rating
 
     def get_answers(self):
         return self.answer_set.all()
+
+    def __str__(self):
+        return self.title
 
     class Meta:
         ordering = ['-creation_date']
@@ -57,3 +67,76 @@ class Answer(models.Model):
     rating = models.IntegerField(default=0, verbose_name="Answer rating")
     is_active = models.BooleanField(default=True, verbose_name="is active")
     is_right = models.BooleanField(default=False, verbose_name="marked by autor as right")
+
+    def like(self):
+        self.rating += 1
+        self.author.rating += 1
+        return self.rating
+
+    def dislike(self):
+        self.rating -= 1
+        self.author.rating -= 1
+        return self.rating
+
+
+class Like(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE, null=True, verbose_name="who set")
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, null=True)
+    answer = models.ForeignKey(Answer, on_delete=models.CASCADE, null=True)
+    is_positive = models.BooleanField(default=True, verbose_name="like/dislike selector")
+
+
+def question_like(question_id, author):
+    question = Question.objects.get(pk=question_id)
+    like = Like.objects.filter(author=author, question=question).first()
+    if like:
+        if like.is_positive:
+            return question.rating
+        else:
+            like.delete()
+            return question.dislike()
+    else:
+        Like.objects.create(author=author, question=question, is_positive=True)
+        return question.like()
+
+
+def question_dislike(question_id, author):
+    question = Question.objects.get(pk=question_id)
+    like = Like.objects.filter(author=author, question=question).first()
+    if like:
+        if not like.is_positive:
+            return question.rating
+        else:
+            like.delete()
+            return question.dislike()
+    else:
+        Like.objects.create(author=author, question=question, is_positive=False)
+        return question.dislike()
+
+
+def answer_like(answer_id, author):
+    answer = Answer.objects.get(pk=answer_id)
+    like = Like.objects.filter(author=author, answer=answer).first()
+    if like:
+        if like.is_positive:
+            return answer.rating
+        else:
+            like.delete()
+            return answer.like()
+    else:
+        Like.objects.create(author=author, answer=answer, is_positive=True)
+        return answer.like()
+
+
+def answer_dislike(answer_id, author):
+    answer = Answer.objects.get(pk=answer_id)
+    like = Like.objects.filter(author=author, answer=answer).first()
+    if like:
+        if not like.is_positive:
+            return answer.rating
+        else:
+            like.delete()
+            return answer.dislike()
+    else:
+        Like.objects.create(author=author, answer=answer, is_positive=False)
+        return answer.dislike()

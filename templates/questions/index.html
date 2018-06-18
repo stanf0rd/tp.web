@@ -4,8 +4,16 @@
 
 {% block content %}
 
-<div class="col-md-8 px-0">
 
+<div class="col-md-8 px-0">
+  {% if messages %}
+  {% for message in messages %}
+  <div class="form-group has-errors alert alert-success text-center" role="alert">
+    {{ message }}
+  </div>
+  {% endfor %}
+  {% endif %}
+  
   <div class="card block">
     <ul class="nav nav-pills nav-fill justify-content-center">
 
@@ -54,7 +62,7 @@
             {{ tag.name }}
           </a>
           {% endfor %}
-        </h5>
+        </h6>
       </div>
     </div>
   </div>

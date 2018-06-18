@@ -69,48 +69,15 @@
   </div>
   {% endfor %}
 
-  <div class="card block myanswer">
-      <h6 class="text-center">
-        <a>And what do you think?</a>
-      </h6>
-      <form novalidate class="form-signin" method="POST">
-        {%csrf_token%}
-        {% for error in form.non_field_errors %}
-        <div class="form-group has-errors alert alert-danger text-center" role="alert">
-          {{ error }}
-        </div>
-        {% endfor %}
-    
-        {% for field in form %}
-        <div class="form-group has-errors text-danger small">
-          {% for error in field.errors %}
-            <div class="alert alert-danger" role="alert">
-              {{ error }}
-            </div>
-          {% endfor %}
-          {% comment %} {% for error in field.errors %} {% endcomment %}
-        </div>
-        <div class="input-group">
-          <div class="input-group-prepend">
-            <button class="float-right btn btn-outline-primary" type="submit">
-              Answer!
-            </button>
-          </div>
-          {{ field }}
-        </div>
-        {% endfor %}
-      </form>
-    </div>
-
-
+  {% if answers.paginator.num_pages != 1 %}
   <ul class="pagination">
 
     {% if answers.number > 2 %}
-      <li class="page-item">
-        <a class="page-link" href="?page=1">&laquo; first</a>
+    <li class="page-item">
+      <a class="page-link" href="?page=1">&laquo; first</a>
       </li>
     {% endif %}
-
+    
     {% if answers.has_previous %}
       <li class="page-item">
         <a class="page-link" href="?page={{ answers.previous_page_number }}">
@@ -119,29 +86,67 @@
       </li>
     {% endif %}
   
-    {% if answers.paginator.num_pages != 1 %}
     <li class="page-item active">
       <a class="page-link" href="#">{{ answers.number }}</a>
     </li>
-    {% endif %}
-
+    
     {% if answers.has_next %}
-      <li class="page-item">
-        <a class="page-link" href="?page={{ answers.next_page_number }}">
-          {{ answers.next_page_number }}
-        </a>
-      </li>
+    <li class="page-item">
+      <a class="page-link" href="?page={{ answers.next_page_number }}">
+        {{ answers.next_page_number }}
+      </a>
+    </li>
     {% endif %}
-      
+    
     {% if answers.next_page_number < answers.paginator.num_pages %}
-      <li class="page-item">
-        <a class="page-link" href="?page={{ answers.paginator.num_pages }}">
-            last &raquo;
-        </a>
-      </li>
+    <li class="page-item">
+      <a class="page-link" href="?page={{ answers.paginator.num_pages }}">
+        last &raquo;
+      </a>
+    </li>
     {% endif %}
-
   </ul>
+  {% endif %}
+
+  {% if user != question.author %}
+  <div class="card block myanswer">
+    <h6 class="text-center">
+      <a>And what do you think?</a>
+    </h6>
+    {% if not user.is_authenticated %}
+    <div class="form-group has-errors alert alert-primary text-center mb-0" role="alert">
+      <a href="{% url 'login' %}">Login</a> or <a href="{% url 'register' %}">register</a> to answer this question!
+    </div>
+    {% else %}
+    <form novalidate class="form-signin" method="POST">
+      {%csrf_token%}
+      {% for error in form.non_field_errors %}
+      <div class="form-group has-errors alert alert-danger text-center" role="alert">
+        {{ error }}
+      </div>
+      {% endfor %}
+  
+      {% for field in form %}
+      <div class="form-group has-errors text-danger small">
+        {% for error in field.errors %}
+          <div class="alert alert-danger" role="alert">
+            {{ error }}
+          </div>
+        {% endfor %}
+      </div>
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <button class="float-right btn btn-outline-primary" type="submit">
+            Answer!
+          </button>
+        </div>
+        {{ field }}
+      </div>
+      {% endfor %}
+    </form>
+    {% endif %}
+  </div>
+  {% endif %}
 
 </div>
 

@@ -1,7 +1,7 @@
 from django.db import models
 from django.forms import ModelForm
 from django import forms
-from questions.models import Question, User, Answer
+from questions.models import Question, User, Answer, Tag
 # from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import  login, authenticate
@@ -42,10 +42,56 @@ class LoginForm(forms.Form):
 
 
 class QuestionForm(ModelForm):
+    title = forms.CharField(widget=forms.TextInput(attrs={
+        'class':'form-control',
+        'placeholder':'Title of your question'
+    }))
+
+    text = forms.CharField(widget=forms.Textarea(attrs={
+        'class':'form-control',
+        'placeholder':'Type your question here'
+    }))
+
+    tags_list = forms.CharField(widget=forms.TextInput(attrs={
+        'class':'form-control',
+        'placeholder':'tags separated by commas (only first 5 will be read!)'
+    }))
+
+    def clean_title(self):
+        if len(self.cleaned_data['title']) < 10:
+            raise forms.ValidationError(
+                "Title is too short. Minimum 10 symbols."
+            )
+        if len(self.cleaned_data['title']) > 100:
+            raise forms.ValidationError("Title is too long... Describe the question below, please.")
+        else:
+            return self.cleaned_data['title']
+
+    def clean_text(self):
+        if len(self.cleaned_data['text']) < 100:
+            raise forms.ValidationError(
+                "Question is too short. Try to describe it issue in more detail."
+            )
+        if len(self.cleaned_data['text']) > 2000:
+            raise forms.ValidationError("Question is too long... Maximum 2000 symbols")
+        else:
+            return self.cleaned_data['text']
 
     class Meta:
         model = Question
-        fields = ['title', 'text', 'tags']
+        fields = ['title', 'text', 'tags_list']
+
+    def save_question(self, request):
+        question = self.save(commit=False)
+        question.author = request.user
+        question.save()
+        taglist = self.cleaned_data['tags_list'].split(',', maxsplit=5)
+        for tag in taglist:
+            if not Tag.objects.filter(name=tag).exists():
+                question.tags.create(name=tag)
+            else:
+                question.tags.add(Tag.objects.get(name=tag))
+        return question
 
 
 class AnswerForm(ModelForm):
@@ -59,6 +105,16 @@ class AnswerForm(ModelForm):
         answer.author = user
         answer.question = question
         answer.save()
+
+    def clean_text(self):
+        if len(self.cleaned_data['text']) < 100:
+            raise forms.ValidationError(
+                "Question is too short. Try to describe it issue in more detail."
+            )
+        if len(self.cleaned_data['text']) > 2000:
+            raise forms.ValidationError("Question is too long... Maximum 2000 symbols")
+        else:
+            return self.cleaned_data['text']
 
     class Meta:
         model = Answer
@@ -76,6 +132,12 @@ class UserForm(UserCreationForm):
         'class':'form-control', 'placeholder':'Confirm password'}))
 
     avatar = forms.ImageField()
+
+    def clean_username(self):
+        if len(self.cleaned_data['username']) > 20:
+            raise forms.ValidationError("Username can not be longer than 20 characters.")
+        else:
+            return self.cleaned_data['username']
 
     class Meta:
         model = User
