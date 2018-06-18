@@ -17,7 +17,7 @@ class Tag(models.Model):
 
 class QuestionManager(models.Manager):
     def get_hot_questions(self):
-        return self.order_by('rating')
+        return self.order_by('-rating')
 
     def get_new_questions(self):
         return self.order_by('-creation_date')
@@ -40,12 +40,16 @@ class Question(models.Model):
 
     def like(self):
         self.rating += 1
+        self.save()
         self.author.rating += 1
+        self.author.save()
         return self.rating
 
     def dislike(self):
         self.rating -= 1
+        self.save()
         self.author.rating -= 1
+        self.author.save()
         return self.rating
 
     def get_answers(self):
@@ -70,12 +74,16 @@ class Answer(models.Model):
 
     def like(self):
         self.rating += 1
+        self.save()
         self.author.rating += 1
+        self.author.save()
         return self.rating
 
     def dislike(self):
         self.rating -= 1
+        self.save()
         self.author.rating -= 1
+        self.author.save()
         return self.rating
 
 
@@ -94,7 +102,7 @@ def question_like(question_id, author):
             return question.rating
         else:
             like.delete()
-            return question.dislike()
+            return question.like()
     else:
         Like.objects.create(author=author, question=question, is_positive=True)
         return question.like()

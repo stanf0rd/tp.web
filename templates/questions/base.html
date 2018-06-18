@@ -3,13 +3,12 @@
 <html>
 <head>
   {% block title %}<title>Know.Share</title>{% endblock %}
-
   {% load static %}
   <link rel="stylesheet" href="{% static 'questions/css/bootstrap.min.css' %}">
   <link rel="stylesheet" href="{% static 'questions/css/askme.css' %}">
-  <script src="{% static 'questions/js/jquery.min.js' %}"></script>
-  <script src="{% static 'questions/js/popper.min.js' %}"></script>
-  <script src="{% static 'questions/js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'questions/js/jquery.min.js' %}" ></script>
+  <script src="{% static 'questions/js/popper.min.js' %}" async></script>
+  <script src="{% static 'questions/js/bootstrap.min.js' %}" async></script>
 </head>
 
 <body>
@@ -36,13 +35,10 @@
           <ul class="navbar-nav ml-auto navdrop">
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                {% load static %}
-                <img src="{% static 'questions/images/cat.jpg' %}" width="30" height="30" class="avatar rounded-circle" alt="">
+                <img src="{{ MEDIA_URL }}{{ user.avatar.url }}" width="30" height="30" class="avatar rounded-circle" alt="">
                 {{ user.username }}
               </a>
               <div class="dropdown-menu">
-                <a class="dropdown-item" href="#">My questions</a>
-                <a class="dropdown-item" href="#">Settings</a>
                 <a class="dropdown-item" href="{% url 'logout' %}">Log out</a>
               </div>
             </li>
@@ -73,8 +69,8 @@
           <h3 class="text-muted text-center border-bottom">Popular tags</h3>
           
           <div class="col-lg-offset-4 mb-3 tegcloud" id="tegcloud">
-            {% for i in popular_tag_list %}
-            <a class="pb-0 badge tag font-weight-light" href="{% url 'by_tag/' tag %}">{{ tag }}</a>
+            {% for tag in popular_tags %}
+            <a class="pb-0 badge tag font-weight-light" href="{% url 'by_tag' tag.name %}">{{ tag.name }}</a>
             {% endfor %}
           </div>
           <script type="text/javascript">

@@ -1,10 +1,13 @@
+import json
 from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator
 from django.contrib import messages
 from django.contrib.auth import login, logout
-from .models import Question, Answer
+from .models import *
 from .forms import AnswerForm, QuestionForm, LoginForm, UserForm
+from django.http import JsonResponse
+
 
 def new(request):
     question_list = Question.objects.get_new_questions()
@@ -104,3 +107,24 @@ def ask(request):
     else:
         form = QuestionForm()
     return render(request, 'questions/ask.html', {'form': form})
+
+
+def rate(request):
+    if request.method == "POST":
+        question_id = request.POST.get('question')
+        answer_id = request.POST.get('answer')
+        reaction_type = request.POST.get('type')
+        if question_id:
+            if reaction_type == 'like':
+                rating = question_like(question_id, request.user)
+            else:
+                rating = question_dislike(question_id, request.user)
+        elif answer_id:
+            if reaction_type == 'like':
+                rating = answer_like(answer_id, request.user)
+            else:
+                rating = answer_dislike(answer_id, request.user)
+
+        data = {}
+        data['rating'] = rating
+        return JsonResponse(data)

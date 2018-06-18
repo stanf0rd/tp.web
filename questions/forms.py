@@ -109,10 +109,10 @@ class AnswerForm(ModelForm):
     def clean_text(self):
         if len(self.cleaned_data['text']) < 100:
             raise forms.ValidationError(
-                "Question is too short. Try to describe it issue in more detail."
+                "Answer is too short. Minimum 100 symbols."
             )
         if len(self.cleaned_data['text']) > 2000:
-            raise forms.ValidationError("Question is too long... Maximum 2000 symbols")
+            raise forms.ValidationError("Answer is too long... Maximum 2000 symbols.")
         else:
             return self.cleaned_data['text']
 

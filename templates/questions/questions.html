@@ -4,6 +4,7 @@
 
 {% block content %}
 
+
 <div class="col-md-8 px-0">
 
   <div class="card block question">
@@ -20,9 +21,13 @@
     <div class="row mt-3 pt-3 border-top">
       <div class="d-flex flex-column mx-auto">
         <div class="btn-group btn-group-sm" role="group">
-          <button type="button" class="btn btn-success">↑</button>
-          <a class="btn border-top border-bottom between-btn">{{ question.rating }}</a>
-          <button type="button" class="btn btn-danger">↓</button>
+
+          <button id="like_{{ question.id }}" type="button" class="btn btn-success">↑</button>
+          <a class="btn border-top border-bottom between-btn" id="q_rating_{{ question.id }}"> 
+            {{ question.rating }}
+          </a>
+          <button id="dislike_{{ question.id }}" type="button" class="btn btn-danger">↓</button>
+
         </div>
       </div>
       <div class="col-md-10 order-2 pl-0">
@@ -44,9 +49,14 @@
       <div class="d-flex flex-column mx-auto">
         <img src="images/anothercat.jpg" width="80" height="80" class="rounded-circle mb-3">
         <div class="btn-group btn-group-sm" role="group">
-          <button type="button" class="btn btn-success">↑</button>
-          <a class="btn border-top border-bottom between-btn">{{ answer.rating }}</a>
-          <button type="button" class="btn btn-danger">↓</button>
+
+          <button id="answer_like_{{ answer.id }}" type="button" class="btn btn-success">↑</button>
+          <a class="btn border-top border-bottom between-btn" id="a_rating_{{ answer.id }}">
+            {{ answer.rating }}
+          </a>
+          <button id="answer_dislike_{{ answer.id }}" type="button" class="btn btn-danger">↓</button>
+
+          
         </div>
       </div>
       <div class="col-md-10 pl-0">
@@ -69,6 +79,80 @@
   </div>
   {% endfor %}
 
+  {% block javascript %}
+    {% csrf_token %}
+    <script>
+      var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+
+      function csrfSafeMethod(method) {
+        // these HTTP methods do not require CSRF protection
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+      }
+
+      $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+          if (!csrfSafeMethod(settings.type) && !this.crossDomain)
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+      });
+
+      $('#like_{{ question.id }}').click(function() {
+        $.post({
+          url: '/ajax/',
+          data: {
+            question: "{{ question.id }}",
+            type: "like",
+          },
+          dataType: "json",
+          success: function(data) {
+            document.getElementById("q_rating_{{ question.id }}").innerHTML = data.rating
+          },
+        });
+      });
+      $('#dislike_{{ question.id }}').click(function() {
+        $.post({
+          url: '/ajax/',
+          data: {
+            question: "{{ question.id }}",
+            type: "dislike",
+          },
+          dataType: "json",
+          success: function(data) {
+            document.getElementById("q_rating_{{ question.id }}").innerHTML = data.rating
+          },
+        });
+      });
+
+      $('#answer_like_{{ answer.id }}').click(function() {
+        $.post({
+          url: '/ajax/',
+          data: {
+            answer: "{{ answer.id }}",
+            type: "like",
+          },
+          dataType: "json",
+          success: function(data) {
+            document.getElementById("a_rating_{{ answer.id }}").innerHTML = data.rating
+          },
+        });
+      });
+      $('#answer_dislike_{{ answer.id }}').click(function() {
+        $.post({
+          url: '/ajax/',
+          data: {
+            answer: "{{ answer.id }}",
+            type: "dislike",
+          },
+          dataType: "json",
+          success: function(data) {
+            document.getElementById("a_rating_{{ answer.id }}").innerHTML = data.rating
+          },
+        });
+      });
+
+    </script>
+  {% endblock %}
+  
   {% if answers.paginator.num_pages != 1 %}
   <ul class="pagination">
 
