@@ -33,7 +33,6 @@ class Question(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     rating = models.IntegerField(default=0, verbose_name="Question rating")
     creation_date = models.DateTimeField(default=timezone.now, verbose_name="Publication time")
-    answer_count = models.IntegerField(default=0, verbose_name="Count of answers")
     is_active = models.BooleanField(default=True, verbose_name="If question is active")
     tags = models.ManyToManyField(Tag, related_name='tags', blank=True)
     objects = QuestionManager()

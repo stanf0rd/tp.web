@@ -34,7 +34,7 @@
     <div class="row">
       <div class="d-flex flex-column mx-auto">
         <img src="{{ MEDIA_URL }}{{ question.author.avatar.url }}" width="80" height="80" class="mx-auto rounded-circle mb-3 ">
-        <a class="btn-sm border between-btn">{{ question.answer_count }} answers</a>
+        <a class="btn-sm border between-btn">{{ question.answer_set.count }} answers</a>
       </div>
       <div class="col-10 pl-0">
         <h5 class="pb-3 mb-3 border-bottom">

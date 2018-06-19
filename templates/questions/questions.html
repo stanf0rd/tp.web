@@ -13,7 +13,7 @@
         {% comment %} {% load media %} {% endcomment %}
         <img src="{{ MEDIA_URL }}{{ question.author.avatar.url }}" width="80" height="80" class="rounded-circle mb-3">
       </div>
-      <div class="col-md-10 order-2 pl-0">
+      <div class="col-md-10 pl-0">
         <h5 class="pb-3 mb-3 border-bottom"><a>{{ question.title }}</a></h5>
         <p class="card-text">{{ question.text }}</p>
       </div>
@@ -47,7 +47,7 @@
   <div class="card block">
     <div class="row">
       <div class="d-flex flex-column mx-auto">
-        <img src="images/anothercat.jpg" width="80" height="80" class="rounded-circle mb-3">
+        <img src="{{ MEDIA_URL }}{{ answer.author.avatar.url }}" width="80" height="80" class="rounded-circle mb-3">
         <div class="btn-group btn-group-sm" role="group">
 
           <button id="answer_like_{{ answer.id }}" type="button" class="btn btn-success">↑</button>
@@ -65,18 +65,95 @@
         </p>
       </div>
     </div>
-    {% if answer.is_right %}
-    <div class="row mt-3 pt-3 border-top">
+    {% if user != question.author %}
+    {% if answer.is_right %}    
+    <div class="row mt-3 pt-3 border-top" id="right-mark{{ answer.id }}">
       <div class="col-md-12 order-2">
         <div class="alert alert-success mb-0 center-text">
           <p class="text-center mb-0">
-            This answer was noted by the author of the question as correct.
+            This answer was marked by the author of the question as correct.
           </p>
         </div>
       </div>
     </div>
     {% endif %}
+    {% endif %}
+    {% if user == question.author %}
+      <button id="right-answer{{ answer.id }}" class="btn {% if not answer.is_right %}btn-outline-success{% endif %}{% if answer.is_right %}btn-outline-danger{% endif %}">
+        {% if answer.is_right %}Mark answer as wrong{% endif %}
+        {% if not answer.is_right %}Mark answer as right{% endif %}
+      </button>
+    {% endif %}
   </div>
+
+  {% csrf_token %}
+  <script>
+    var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+
+    function csrfSafeMethod(method) {
+      // these HTTP methods do not require CSRF protection
+      return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+
+    $.ajaxSetup({
+      beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain)
+          xhr.setRequestHeader("X-CSRFToken", csrftoken);
+      }
+    });
+
+    $('#right-answer{{ answer.id }}').click(function() {
+      $.post({
+        url: '/mark/',
+        data: {
+          answer: "{{ answer.id }}",
+        },
+        dataType: "json",
+        success: function(data) {
+          btn = document.getElementById("right-answer{{ answer.id }}")
+          if (data.right == true) {
+            btn.innerHTML = "Mark answer as wrong"
+            btn.classList.remove("btn-outline-success")
+            btn.classList.add("btn-outline-danger")
+          }
+          if (data.right == false) {
+            btn.innerHTML = "Mark answer as right"
+            btn.classList.remove("btn-outline-danger")
+            btn.classList.add("btn-outline-success")
+          }
+        },
+      });
+    });
+
+    $('#answer_like_{{ answer.id }}').click(function() {
+      $.post({
+        url: '/ajax/',
+        data: {
+          answer: "{{ answer.id }}",
+          type: "like",
+        },
+        dataType: "json",
+        success: function(data) {
+          document.getElementById("a_rating_{{ answer.id }}").innerHTML = data.rating
+        },
+      });
+    });
+    $('#answer_dislike_{{ answer.id }}').click(function() {
+      $.post({
+        url: '/ajax/',
+        data: {
+          answer: "{{ answer.id }}",
+          type: "dislike",
+        },
+        dataType: "json",
+        success: function(data) {
+          document.getElementById("a_rating_{{ answer.id }}").innerHTML = data.rating
+        },
+      });
+    });
+
+  </script>
+
   {% endfor %}
 
   {% block javascript %}
@@ -94,6 +171,20 @@
           if (!csrfSafeMethod(settings.type) && !this.crossDomain)
             xhr.setRequestHeader("X-CSRFToken", csrftoken);
         }
+      });
+
+      $('#right-answer{{ answer.id }}').click(function() {
+        $.post({
+          url: '/mark/',
+          data: {
+            answer: "{{ answer.id }}",
+          },
+          dataType: "json",
+          success: function(data) {
+            document.getElementById("right-mark{{ answer.id }}").style.visibility='visible'
+            document.getElementById("right-answer{{ answer.id }}").style.visibility='hidden'
+          },
+        });
       });
 
       $('#like_{{ question.id }}').click(function() {
@@ -119,33 +210,6 @@
           dataType: "json",
           success: function(data) {
             document.getElementById("q_rating_{{ question.id }}").innerHTML = data.rating
-          },
-        });
-      });
-
-      $('#answer_like_{{ answer.id }}').click(function() {
-        $.post({
-          url: '/ajax/',
-          data: {
-            answer: "{{ answer.id }}",
-            type: "like",
-          },
-          dataType: "json",
-          success: function(data) {
-            document.getElementById("a_rating_{{ answer.id }}").innerHTML = data.rating
-          },
-        });
-      });
-      $('#answer_dislike_{{ answer.id }}').click(function() {
-        $.post({
-          url: '/ajax/',
-          data: {
-            answer: "{{ answer.id }}",
-            type: "dislike",
-          },
-          dataType: "json",
-          success: function(data) {
-            document.getElementById("a_rating_{{ answer.id }}").innerHTML = data.rating
           },
         });
       });

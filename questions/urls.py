@@ -11,7 +11,8 @@ urlpatterns = [
     path('logout/', views.logout_page, name='logout'),
     path('register/', views.register, name='register'),
     path('ask/', views.ask, name='ask'),
-    path('ajax/', views.rate, name='like')
+    path('ajax/', views.rate, name='like'),
+    path('mark/', views.mark, name='mark')
 ]
 
 urlpatterns += staticfiles_urlpatterns()

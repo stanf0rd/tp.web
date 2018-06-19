@@ -25,7 +25,7 @@ SECRET_KEY = '^xupser&=4yi+kdcr935i1b_bus1a%tsn+ye716vrlzj7gyc%4'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['rasseki.com', '192.168.88.253', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['rasseki.com', '192.168.88.253', 'localhost', '127.0.0.1', 'backend']
 
 # Application definition
 

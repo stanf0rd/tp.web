@@ -128,3 +128,20 @@ def rate(request):
         data = {}
         data['rating'] = rating
         return JsonResponse(data)
+
+
+def mark(request):
+    data = {}
+    if request.method == "POST":
+        answer_id = request.POST.get('answer')
+        answer = Answer.objects.get(pk=answer_id)
+        if answer:
+            if answer.is_right is False:
+                answer.is_right = True
+                data['right'] = True
+                answer.save()
+            elif answer.is_right is True:
+                answer.is_right = False
+                data['right'] = False
+                answer.save()
+    return JsonResponse(data)
